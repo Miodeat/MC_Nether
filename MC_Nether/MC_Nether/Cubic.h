@@ -9,21 +9,21 @@ public:
 	// @param ver: a reference of float pointer. 
 	//             It will point to the first vertexs after calling.
 	// @return: the number of vertexs
-	int getVertex(float* &ver) {
-		ver = vertexs;
-		return 24;
-	}
+	int getVertex(float*& ver);
 
 	// get incides array
 	//
 	// @param inci: a reference of int pointer. 
 	//              It will point to the first incide after calling.
 	// @return: the number of incides
-	int getIncides(int* &inci) {
-		inci = incides;
-		return 36;
-	}
+	int getIncides(int*& inci);
+
+protected:
+	// an interface that subclasss must override.
+	virtual void setupTexture() = 0;
+
 private:
+	// array of vertexs
 	float vertexs[24] = {
 		-0.1f, -0.1f, -0.1f,
 		0.1f, -0.1f, -0.1f,
@@ -35,6 +35,7 @@ private:
 		-0.1f, 0.1f, 0.1f,
 	};
 
+	// array of vertexs incides
 	int incides[36] = {
 		// front surface
 		0, 1, 2,
