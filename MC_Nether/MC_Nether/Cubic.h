@@ -1,6 +1,10 @@
 #pragma once
+#include <string>
+#include <vector>
+#include <stb_image.h>
 
-// every cube should inherit this class
+// basic class of cubes.
+// every cube should inherit this class publicly.
 class Cubic
 {
 public:
@@ -18,9 +22,46 @@ public:
 	// @return: the number of incides
 	int getIncides(int*& inci);
 
+	// get texturs' width
+	//
+	// @param
+	// @return: a vertor that contains all widths of texture images
+	std::vector<int> getTextWidths();
+
+	// get texturs' height
+	//
+	// @param
+	// @return: a vertor that contains all heights of texture images
+	std::vector<int> getTextHeights();
+
+	// get texturs' number of channels
+	//
+	// @param
+	// @return: a vertor that contains all numbers of channels of texture images
+	std::vector<int> getNChannels();
+
+	// get texturs' data
+	//
+	// @param
+	// @return: a vertor that contains all widths of texture images
+	std::vector<unsigned char*> getTextData();
+
 protected:
+
+	std::vector<int> vecTextWidth; // vector for width of texture(maybe multiple)
+	std::vector<int> vecTextHeight; // vector for height of texture(maybe multiple)
+	std::vector<int> vecTextNChannels; // vector for number of channels of texture image(maybe multiple)
+	std::vector<unsigned char*> vecTextData; // texture image data(maybe multiple)
+
 	// an interface that subclasss must override.
-	virtual void setupTexture() = 0;
+	// this function will read all texture images,
+	// and load their width, height, number of channels by order.
+	//
+	// @param paths: the vector that store all texture images' paths.
+	// @return: void
+	virtual void setupTexture(std::vector<const char*> paths);
+
+
 
 private:
 	// array of vertexs
@@ -56,5 +97,6 @@ private:
 		2, 3, 6,
 		3, 6, 7,
 	};
+
 };
 

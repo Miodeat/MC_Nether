@@ -13,6 +13,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 
+
+
 int main() {
 
 	// initialize GLFW and declare the version of openGL
