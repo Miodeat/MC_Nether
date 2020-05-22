@@ -1,15 +1,29 @@
 #include "Cubic.h"
 
-int Cubic::getVertex(float*& ver)
+void Cubic::getVertex(float*& ver)
 {
-	ver = vertexs;
-	return 24;
+	// copy vertexs array
+	for (int i = 0; i < verLen; i++) {
+		ver[i] = this->vertexs[i];
+	}	
 }
 
-int Cubic::getIncides(int*& inci)
+int Cubic::getVerLen()
 {
-	inci = incides;
-	return 36;
+	return verLen;
+}
+
+void Cubic::getIncides(unsigned int*& inci)
+{
+	// copy incides array
+	for (int i = 0; i < inciLen; i++) {
+		inci[i] = this->incides[i];
+	}
+}
+
+int Cubic::getIncidesLen()
+{
+	return inciLen;
 }
 
 std::vector<int> Cubic::getTextWidths()
@@ -34,6 +48,7 @@ std::vector<unsigned char*> Cubic::getTextData()
 
 void Cubic::setupTexture(std::vector<const char*> paths)
 {
+	stbi_set_flip_vertically_on_load(true);
 	std::vector<const char*>::iterator it = paths.begin();
 	while (it != paths.end())
 	{

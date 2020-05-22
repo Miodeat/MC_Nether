@@ -11,8 +11,14 @@ SoulSand::SoulSand()
 	setupTexture(paths);
 }
 
-int SoulSand::getTextCoors(float*& textC)
+void SoulSand::getTextCoors(float*& textC)
 {
-	textC = this->textCoor;
-	return 16;
+	for (int i = 0; i < textCoorLen; i++) {
+		textC[i] = this->textCoor[i];
+	}
+}
+
+int SoulSand::getTextCoorLen()
+{
+	return textCoorLen;
 }

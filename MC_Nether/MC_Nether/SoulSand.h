@@ -7,15 +7,59 @@ class SoulSand :
 	public Cubic
 {
 private:
-	float textCoor[16] = {
+	static const int textCoorLen = 16;
+	float textCoor[textCoorLen] = {
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		1.0f, 1.0f,
 		0.0f, 1.0f,
+
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		1.0f, 1.0f,
 		0.0f, 1.0f,
+		//// front
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f,
+		//// left
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f,
+		//// right
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f,
+		//// back
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f,
+		//// bottom
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f,
+		//// top
+		//1.0f, 1.0f,
+		//1.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 0.0f,
+		//0.0f, 1.0f,
+		//1.0f, 1.0f
 	};
 
 public:
@@ -24,7 +68,13 @@ public:
 	// get texture coordinates and the length of the coordinates array
 	//
 	// @param 
-	// @return: the length of coordinates array
-	int getTextCoors(float* &textC);
+	// @return: void
+	void getTextCoors(float* &textC);
+
+	// get the length of texture coordinates array
+	//
+	// @param:
+	// @return: the length of texture coordinates array
+	int getTextCoorLen();
 };
 

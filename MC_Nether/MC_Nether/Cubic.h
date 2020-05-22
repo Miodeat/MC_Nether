@@ -12,15 +12,27 @@ public:
 	//
 	// @param ver: a reference of float pointer. 
 	//             It will point to the first vertexs after calling.
-	// @return: the number of vertexs
-	int getVertex(float*& ver);
+	// @return: void
+	void getVertex(float*& ver);
+
+	// get the length of vertexs array, A.K.A. number of vertexs
+	//
+	// @param
+	// @return: the length of vertexs array
+	int getVerLen();
 
 	// get incides array
 	//
 	// @param inci: a reference of int pointer. 
 	//              It will point to the first incide after calling.
-	// @return: the number of incides
-	int getIncides(int*& inci);
+	// @return: void
+	void getIncides(unsigned int*& inci);
+
+	// get the length of incides array
+	//
+	// @param
+	// @return: the length of incides array
+	int getIncidesLen();
 
 	// get texturs' width
 	//
@@ -64,38 +76,42 @@ protected:
 
 
 private:
+	static const int verLen = 24;
+
 	// array of vertexs
-	float vertexs[24] = {
-		-0.1f, -0.1f, -0.1f,
-		0.1f, -0.1f, -0.1f,
-		0.1f, 0.1f, -0.1f,
-		-0.1f, 0.1f, -0.1f,
-		-0.1f, -0.1f, 0.1f,
-		0.1f, -0.1f, 0.1f,
-		0.1f, 0.1f, 0.1f,
-		-0.1f, 0.1f, 0.1f,
+	float vertexs[verLen] = {
+		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
+		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
+		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
+		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
 	};
 
+	static const int inciLen = 36;
+
 	// array of vertexs incides
-	int incides[36] = {
+	unsigned int incides[inciLen] = {
 		// front surface
-		0, 1, 2,
-		0, 2, 3,
+		2, 1, 0,
+		0, 3, 2,
 		// left
-		0, 4, 7,
-		0, 3, 7,
+		3, 0, 4,
+		4, 7, 3,
 		// right
-		1, 5, 6,
+		6, 5, 1,
 		1, 2, 6,
 		// back
-		4, 5, 6,
-		4, 6, 7,
+		7, 4, 5,
+		5, 6, 7,
 		// bottom
-		0, 1, 5,
-		0, 4, 5,
+		1, 5, 4,
+		4, 0, 1,
 		// top
-		2, 3, 6,
-		3, 6, 7,
+		6, 2, 3,
+		3, 7, 6,
 	};
 
 };
