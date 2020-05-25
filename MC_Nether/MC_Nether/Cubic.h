@@ -65,7 +65,7 @@ protected:
 	std::vector<int> vecTextNChannels; // vector for number of channels of texture image(maybe multiple)
 	std::vector<unsigned char*> vecTextData; // texture image data(maybe multiple)
 
-	// an interface that subclasss must override.
+	// an interface that subclasss could override.
 	// this function will read all texture images,
 	// and load their width, height, number of channels by order.
 	//

@@ -4,6 +4,9 @@
 #include <learnopengl/shader.h>
 
 #include "SoulSand.h"
+#include "Mouse.h"
+
+int winWidth = 800, winHeight = 800; // window's width and height
 
 const int textureNum = 1; // number of textures 
 unsigned int texture[textureNum]; // array stroes textures
@@ -15,6 +18,14 @@ unsigned int EBO; // incides buffer
 
 Shader* pCubeShader = NULL; // shader for cubes
 
+float lookFrom[] = { 0.0f, 0.0f, 10.0f }; // camera's position
+float lookAt[] = { 0.0f, 0.0f, 0.0f }; // where camera look at
+float lookUp[] = { 0.0f, 1.0f, 0.0f }; // define the direction "up" for the world
+
+double aspect = winWidth / (double)winHeight;
+double fov = 45;
+double zNear = 0.01;
+double zFar = 100.0;
 
 
 // generate and bind vertex buffer obejects and vertex array objects
@@ -112,6 +123,28 @@ void render() {
 	// use the shader program
 	pCubeShader->use();
 
+	// update look at param
+	lookAt[0] += xTrans;
+	lookAt[1] += yTrans;
+
+	// reset xTrans and yTrans
+	xTrans = 0.0f;
+	yTrans = 0.0f;
+
+	// calculate model changing
+	glm::mat4 model;
+	// pCubeShader->setMat4("model", model);
+	// calculate view changing
+	glm::mat4 view;
+	view = glm::lookAt(glm::vec3(lookFrom[0], lookFrom[1], lookFrom[2]),
+		glm::vec3(lookAt[0], lookAt[1], lookAt[2]),
+		glm::vec3(lookUp[0], lookUp[1], lookUp[2]));
+	pCubeShader->setMat4("view", view);
+	// calculate projectin changing
+	glm::mat4 projection = glm::perspective(fov * 0.5 * glm::pi<double>() / 360.0, aspect, zNear, zFar);
+	pCubeShader->setMat4("projection", projection);
+
+
 	// do rendering
 	// draw cube
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -154,7 +187,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
-	GLFWwindow* window = glfwCreateWindow(800, 800, "MC_Nether", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, "MC_Nether", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -171,10 +204,11 @@ int main() {
 	}
 
 	// set up view port
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, winWidth, winHeight);
 
 	// register the callback function of size-changing event
 	glfwSetWindowSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, cursorPosCallback);
 
 	setup_vertexs();
 	setup_shader();
