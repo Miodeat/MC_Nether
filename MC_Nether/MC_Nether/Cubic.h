@@ -21,19 +21,6 @@ public:
 	// @return: the length of vertexs array
 	int getVerLen();
 
-	// get incides array
-	//
-	// @param inci: a reference of int pointer. 
-	//              It will point to the first incide after calling.
-	// @return: void
-	void getIncides(unsigned int*& inci);
-
-	// get the length of incides array
-	//
-	// @param
-	// @return: the length of incides array
-	int getIncidesLen();
-
 	// get texturs' width
 	//
 	// @param
@@ -58,6 +45,11 @@ public:
 	// @return: a vertor that contains all widths of texture images
 	std::vector<unsigned char*> getTextData();
 
+	// get cube scale
+	//
+	// @param
+	// @return: a float shows the scale
+	float getScale();
 protected:
 
 	std::vector<int> vecTextWidth; // vector for width of texture(maybe multiple)
@@ -76,42 +68,55 @@ protected:
 
 
 private:
-	static const int verLen = 24;
+	static const int verLen = 108;
+
+	// using the scale to multiply with window's width or height can get cube width
+	float scale = 0.2f; 
 
 	// array of vertexs
 	float vertexs[verLen] = {
+		// front
 		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
 		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
 		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
+		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
 		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
+		// back
 		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
 		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
 		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
 		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
-	};
-
-	static const int inciLen = 36;
-
-	// array of vertexs incides
-	unsigned int incides[inciLen] = {
-		// front surface
-		2, 1, 0,
-		0, 3, 2,
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
 		// left
-		3, 0, 4,
-		4, 7, 3,
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
+		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
 		// right
-		6, 5, 1,
-		1, 2, 6,
-		// back
-		7, 4, 5,
-		5, 6, 7,
+		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
+		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
+		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
 		// bottom
-		1, 5, 4,
-		4, 0, 1,
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
+		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
+		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
+		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
+		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
 		// top
-		6, 2, 3,
-		3, 7, 6,
+		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
+		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
+		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
 	};
 
 };

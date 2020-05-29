@@ -1,8 +1,8 @@
-#include "SoulSand.h"
+#include "DiamondOre.h"
 
-SoulSand::SoulSand()
+DiamondOre::DiamondOre()
 {
-	const char* pa = ".\\data\\textures\\soul_sand.png";
+	const char* pa = ".\\data\\textures\\diamond_ore.png";
 
 	std::vector<const char*> paths;
 	paths.push_back(pa);
@@ -10,14 +10,14 @@ SoulSand::SoulSand()
 	setupTexture(paths);
 }
 
-void SoulSand::getTextCoors(float*& textC)
+void DiamondOre::getTextCoors(float*& textC)
 {
 	for (int i = 0; i < textCoorLen; i++) {
 		textC[i] = this->textCoor[i];
 	}
 }
 
-int SoulSand::getTextCoorLen()
+int DiamondOre::getTextCoorLen()
 {
 	return textCoorLen;
 }

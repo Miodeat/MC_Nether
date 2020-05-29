@@ -1,8 +1,8 @@
-#include "SoulSand.h"
+#include "NetherBrick.h"
 
-SoulSand::SoulSand()
+NetherBrick::NetherBrick()
 {
-	const char* pa = ".\\data\\textures\\soul_sand.png";
+	const char* pa = ".\\data\\textures\\nether_brick.png";
 
 	std::vector<const char*> paths;
 	paths.push_back(pa);
@@ -10,14 +10,14 @@ SoulSand::SoulSand()
 	setupTexture(paths);
 }
 
-void SoulSand::getTextCoors(float*& textC)
+void NetherBrick::getTextCoors(float*& textC)
 {
 	for (int i = 0; i < textCoorLen; i++) {
 		textC[i] = this->textCoor[i];
 	}
 }
 
-int SoulSand::getTextCoorLen()
+int NetherBrick::getTextCoorLen()
 {
 	return textCoorLen;
 }

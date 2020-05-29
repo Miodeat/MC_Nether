@@ -13,19 +13,6 @@ int Cubic::getVerLen()
 	return verLen;
 }
 
-void Cubic::getIncides(unsigned int*& inci)
-{
-	// copy incides array
-	for (int i = 0; i < inciLen; i++) {
-		inci[i] = this->incides[i];
-	}
-}
-
-int Cubic::getIncidesLen()
-{
-	return inciLen;
-}
-
 std::vector<int> Cubic::getTextWidths()
 {
 	return this->vecTextWidth;
@@ -44,6 +31,11 @@ std::vector<int> Cubic::getNChannels()
 std::vector<unsigned char*> Cubic::getTextData()
 {
 	return this->vecTextData;
+}
+
+float Cubic::getScale()
+{
+	return scale;
 }
 
 void Cubic::setupTexture(std::vector<const char*> paths)
