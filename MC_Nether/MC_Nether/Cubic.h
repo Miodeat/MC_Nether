@@ -75,49 +75,50 @@ private:
 
 	// array of vertexs
 	float vertexs[verLen] = {
-		// front
-		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
-		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
-		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
-		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
-		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
-		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
 		// back
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
-		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 back, lower left corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 back, lower right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 back, upper right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 back, upper right corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 back, upper left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 back, lower left corner
+		// front
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 front, lower right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 front, upper left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
 		// left
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
-		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
-		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
-		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
-		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 back, lower left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 back, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 back, upper left corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 front, upper left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
 		// right
-		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
-		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
-		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 back, lower right corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 front, lower right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 back, upper right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 back, lower right corner
 		// bottom
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
-		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
-		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
-		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
-		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
-		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 front, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 back, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 back, lower right corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 front, lower left corner
 		// top
-		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
-		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
-		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
-		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 back, upper left corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 back, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 front, upper right corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 front, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 back, upper left corner
 	};
+
 
 };
 

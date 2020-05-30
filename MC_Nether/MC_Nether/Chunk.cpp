@@ -66,6 +66,23 @@ int Chunk::GenHeight(glm::vec3 pos)
     return floor(noise0 + noise1 + noise2 + baseHeight);
 }
 
+void Chunk::setTransPos(glm::vec3 tran)
+{
+    float half = blockWid / 2;
+    transPos = tran;
+    boun.minx = tran.x - half;
+    boun.maxx = tran.x + (blockWid * width) + half;
+    boun.miny = tran.y - half;
+    boun.maxy = tran.y + (blockWid * height) + half;
+    boun.minz = tran.z - half;
+    boun.maxz = tran.z + (blockWid * width) + half;
+}
+
+glm::vec3 Chunk::getTransPos()
+{
+    return transPos;
+}
+
 Chunk::Chunk()
 {
     Cubic cube;
@@ -78,7 +95,7 @@ Chunk::Chunk(glm::vec3 trans)
     Cubic cube;
     blockWid = cube.getCubeWidth();
 
-    transPos = trans;
+    setTransPos(trans);
 	initMap();
 }
 
@@ -89,8 +106,7 @@ void Chunk::initMap()
 	offset1 = glm::vec3(rand(), rand(), rand());
 	offset2 = glm::vec3(rand(), rand(), rand());
 
-    Cubic cube;
-    float cubeWidth = cube.getCubeWidth();
+    float half = blockWid / 2;
 
     for (int x = 0; x < width; x++)
     {
@@ -99,6 +115,14 @@ void Chunk::initMap()
             for (int z = 0; z < width; z++)
             {
                 map[x][y][z] = GenerateBlockType(glm::vec3(x, y, z));
+                float opx = x * blockWid;
+                float opy = y * blockWid;
+                float opz = z * blockWid;
+                opx += transPos.x;
+                opy += transPos.y;
+                opz += transPos.z;
+                cubeBouns[x][y][z] = boundary(opx - half, opx + half, opy - half,
+                    opy + half, opz - half, opz + half);
             }
         }
     }

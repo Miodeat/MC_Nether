@@ -198,22 +198,24 @@ void Game::createChunk()
 		Chunk chunk(glm::vec3(0, 0, 0));
 		float blockWidth = chunk.blockWid;
 		int midBlock = (chunk.width / 2) - 1;
-		for (int i = chunk.height - 1; i >= 0; i--) {
+		/*for (int i = chunk.height - 1; i >= 0; i--) {
 			if (chunk.map[midBlock][i][midBlock] == NONE &&
 				chunk.map[midBlock][i - 1][midBlock] == NONE &&
 				chunk.map[midBlock][i - 2][midBlock] != NONE) {
 				lookPos = glm::vec3(midBlock * blockWidth, i * blockWidth, midBlock * blockWidth);
 				break;
 			}
-		}
+		}*/
 		chunks.push_back(chunk);
 	}
 }
 
-void Game::drawChunkAndCeiling()
+void Game::drawChunk()
 {
 	for (int i = 0; i < chunks.size(); i++) {
 		Chunk chunk = chunks.at(i);
+		float wid = chunk.blockWid;
+		float halfWid = wid / 2;
 
 		for (int x = 0; x < chunk.width; x++)
 		{
@@ -221,13 +223,13 @@ void Game::drawChunkAndCeiling()
 			{
 				for (int z = 0; z < chunk.width; z++)
 				{
-					/*map[x][y][z] = GenerateBlockType(
-						glm::vec3(x * cubeWidth, y * cubeWidth, z * cubeWidth) + transPos);*/
-					float opX = x * chunk.blockWid;
-					float opY = y * chunk.blockWid;
-					float opZ = z * chunk.blockWid;
+					float opX = x * wid;
+					float opY = y * wid;
+					float opZ = z * wid;
 					drawCube(chunk.map[x][y][z],
-						opX + chunk.transPos.x, opY + chunk.transPos.y, opZ + chunk.transPos.z);
+						opX + chunk.getTransPos().x,
+						opY + chunk.getTransPos().y,
+						opZ + chunk.getTransPos().z);
 				}
 			}
 		}
@@ -235,23 +237,118 @@ void Game::drawChunkAndCeiling()
 
 }
 
+bool Game::checkMoveCollision(glm::vec3 target)
+{
+	boundary tarBoun = genCameraBoun(target);
+	int chunkIndex = -1;
+	for (int i = 0; i < chunks.size(); i++) {
+		boundary chunkBoun = chunks.at(i).boun;
+		if (tarBoun.minx <= chunkBoun.maxx && tarBoun.maxx >= chunkBoun.minx &&
+			tarBoun.miny <= chunkBoun.maxy && tarBoun.maxy >= chunkBoun.miny &&
+			tarBoun.minz <= chunkBoun.maxz && tarBoun.maxz >= chunkBoun.minz) {
+			chunkIndex = i;
+			break;
+		}
+	}
+
+	if (chunkIndex == -1) {
+		return false;
+	}
+	
+	return checkCubeCollision(chunkIndex, tarBoun);
+
+}
+
+bool Game::checkCubeCollision(int chunkIndex, boundary bound)
+{
+	Chunk chunk = chunks.at(chunkIndex);
+	for (int x = 0; x < chunk.width; x++)
+	{
+		for (int y = 0; y < chunk.height; y++)
+		{
+			for (int z = 0; z < chunk.width; z++)
+			{
+				boundary cubeB = chunk.cubeBouns[x][y][z];
+				int type = chunk.map[x][y][z];
+				if (type == NONE) {
+					continue;
+				}
+				if (bound.minx < cubeB.maxx && bound.maxx > cubeB.minx &&
+					bound.miny < cubeB.maxy && bound.maxy > cubeB.miny &&
+					bound.minz < cubeB.maxz && bound.maxz > cubeB.minz) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+boundary Game::genCameraBoun(glm::vec3 target)
+{
+	return boundary(target.x - cameraWid, target.x + cameraWid,
+		target.y - cameraToFoot, target.y + cameraToTop,
+		target.z - cameraWid, target.z + cameraWid);
+}
+
 void Game::keyPress()
 {
+	glm::vec3 front = lookFront;
+	front.y = 0.0f;
 	if (wPress) {
-		lookPos += keySpeed * lookFront;
+		glm::vec3 targetPos = lookPos + (keySpeed * front);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
 		wPress = false;
 	}
 	if (sPress) {
-		lookPos -= keySpeed * lookFront;
+		glm::vec3 targetPos = lookPos - (keySpeed * front);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
 		sPress = false;
 	}
 	if (aPress) {
-		lookPos += keySpeed * lookRight;
+		glm::vec3 targetPos = lookPos + (keySpeed * lookRight);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
 		aPress = false;
 	}
 	if (dPress) {
-		lookPos -= keySpeed * lookRight;
+		glm::vec3 targetPos = lookPos - (keySpeed * lookRight);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
 		dPress = false;
+	}
+
+	if (spacePress) {
+		glm::vec3 targetPos = lookPos + (keySpeed * lookUp);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
+		spacePress = false;
+	}
+
+	if (LCtrlPress) {
+		glm::vec3 targetPos = lookPos - (keySpeed * lookUp);
+		if (!checkMoveCollision(targetPos)) {
+			lookPos = targetPos;
+		}
+		LCtrlPress = false;
+	}
+}
+
+void Game::mouseClick()
+{
+	if (mouseBtn1) {
+		mouseBtn1 = false;
+	}
+
+	if (mouseBtn3) {
+		mouseBtn3 = false;
 	}
 }
 
@@ -281,8 +378,7 @@ void Game::render()
 	// update lookRight
 	lookRight = glm::normalize(glm::cross(lookUp, lookFront));
 	keyPress();
-
-	drawChunkAndCeiling();
+	drawChunk();
 
 }
 
@@ -297,7 +393,6 @@ Game::Game(int windowWid, int winHei)
 
 	setShader("CubeShader.vs", "CubeShader.fsh");
 
-	chunk.transPos = glm::vec3(0,0,0);
 	
 	GoldOre gold;
 	DiamondOre diamond;
@@ -343,4 +438,5 @@ Game::Game(int windowWid, int winHei)
 	glBindTexture(GL_TEXTURE_2D, texture[5]);
 
 	createChunk();
+	cameraBoun = genCameraBoun(lookPos);
 }

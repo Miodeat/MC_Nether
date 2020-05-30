@@ -14,6 +14,21 @@
 #include "NetherRack.h"
 #include "Sand.h"
 
+struct boundary {
+	float minx;
+	float maxx;
+	float miny;
+	float maxy;
+	float minz;
+	float maxz;
+	boundary():
+		minx(0.0f), maxx(0.0f), miny(0.0f),
+		maxy(0.0f), minz(0.0f), maxz(0.0f) {}
+	boundary(float _minx, float _maxx, float _miny,
+		float _maxy, float _minz, float _maxz) :
+		minx(_minx), maxx(_maxx), miny(_miny),
+		maxy(_maxy), minz(_minz), maxz(_maxz) {}
+};
 
 class Chunk
 {
@@ -33,6 +48,7 @@ private:
 	int GenerateBlockType(glm::vec3 pos);
 	int GenHeight(glm::vec3 pos);
 
+	glm::vec3 transPos;
 	
 public:
 	const static int width = 30;
@@ -46,7 +62,12 @@ public:
 
 	int map[width][height][width];
 
-	glm::vec3 transPos;
+	boundary cubeBouns[width][height][width];
+
+	void setTransPos(glm::vec3 tran);
+	glm::vec3 getTransPos();
+
+	boundary boun;
 
 	Chunk();
 	Chunk(glm::vec3 trans);

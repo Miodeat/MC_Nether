@@ -7,6 +7,8 @@ extern bool wPress;
 extern bool sPress;
 extern bool aPress;
 extern bool dPress;
+extern bool spacePress;
+extern bool LCtrlPress;
 
 // keyboard callback for GLFW
 // tell openGL what to do when a key is pressed

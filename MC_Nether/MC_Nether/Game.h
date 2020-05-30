@@ -49,8 +49,12 @@ private:
 	double zNear = 0.01;
 	double zFar = 100.0;
 
-	Chunk chunk;
-	std::vector<Chunk> chunks;
+	std::vector<Chunk> chunks; // a vector stores all chunks
+
+	float cameraToFoot = 0.25f;
+	float cameraToTop = 0.05f;
+	float cameraWid = 0.1f;
+	boundary cameraBoun;
 
 	float keySpeed = 0.1f; // how fast camera move when key is pressed.
 
@@ -75,7 +79,13 @@ private:
 
 	void createChunk();
 
-	void drawChunkAndCeiling();
+	void drawChunk();
+
+	bool checkMoveCollision(glm::vec3 target);
+
+	bool checkCubeCollision(int chunkIndex, boundary boun);
+
+	boundary genCameraBoun(glm::vec3 target);
 
 public:
 	Game(int windowWid, int windowHei);
@@ -91,6 +101,8 @@ public:
 	// @param
 	// @return: void
 	void keyPress();
+
+	void mouseClick();
 
 	void destory();
 };
