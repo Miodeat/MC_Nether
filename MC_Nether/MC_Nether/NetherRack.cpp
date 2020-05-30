@@ -2,7 +2,7 @@
 
 NetherRack::NetherRack()
 {
-	const char* pa = ".\\data\\textures\\soul_sand.png";
+	const char* pa = ".\\data\\textures\\netherrack.png";
 
 	std::vector<const char*> paths;
 	paths.push_back(pa);

@@ -192,6 +192,49 @@ void Game::drawCube(int textIndex, float x, float y, float z)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+void Game::createChunk()
+{
+	if (chunks.size() == 0) {
+		Chunk chunk(glm::vec3(0, 0, 0));
+		float blockWidth = chunk.blockWid;
+		int midBlock = (chunk.width / 2) - 1;
+		for (int i = chunk.height - 1; i >= 0; i--) {
+			if (chunk.map[midBlock][i][midBlock] == NONE &&
+				chunk.map[midBlock][i - 1][midBlock] == NONE &&
+				chunk.map[midBlock][i - 2][midBlock] != NONE) {
+				lookPos = glm::vec3(midBlock * blockWidth, i * blockWidth, midBlock * blockWidth);
+				break;
+			}
+		}
+		chunks.push_back(chunk);
+	}
+}
+
+void Game::drawChunkAndCeiling()
+{
+	for (int i = 0; i < chunks.size(); i++) {
+		Chunk chunk = chunks.at(i);
+
+		for (int x = 0; x < chunk.width; x++)
+		{
+			for (int y = 0; y < chunk.height; y++)
+			{
+				for (int z = 0; z < chunk.width; z++)
+				{
+					/*map[x][y][z] = GenerateBlockType(
+						glm::vec3(x * cubeWidth, y * cubeWidth, z * cubeWidth) + transPos);*/
+					float opX = x * chunk.blockWid;
+					float opY = y * chunk.blockWid;
+					float opZ = z * chunk.blockWid;
+					drawCube(chunk.map[x][y][z],
+						opX + chunk.transPos.x, opY + chunk.transPos.y, opZ + chunk.transPos.z);
+				}
+			}
+		}
+	}
+
+}
+
 void Game::keyPress()
 {
 	if (wPress) {
@@ -239,28 +282,7 @@ void Game::render()
 	lookRight = glm::normalize(glm::cross(lookUp, lookFront));
 	keyPress();
 
-
-	SimplexNoise sNoise;
-
-	for (float z = worldZmin; z < worldZmax; z += 0.4) {	
-		for (float y = worldYmin; y < worldYmax; y += 0.4) {
-			for (float x = worldXmin; x < worldXmax; x += 0.4) {
-				if ((z > lookPos[2] - 1.0f && z < lookPos[2] + 0.4) 
-					&& (y < lookPos[1] + 1.0f && y > lookPos[1]) 
-					&& (x > lookPos[0] - 1.0f && x < lookPos[0] + 1.0f)) {
-					continue;
-				}
-				float noiseValue = sNoise.noise(z, y, x) + 1;
-				noiseValue *= 3.5f;
-				int textIndex = (int)floor(noiseValue) - 1;
-				if (textIndex == 6) {
-					textIndex = -1;
-				}
-
-				drawCube(textIndex, x, y, z);
-			}
-		}
-	}
+	drawChunkAndCeiling();
 
 }
 
@@ -274,6 +296,8 @@ Game::Game(int windowWid, int winHei)
 	setVertex();
 
 	setShader("CubeShader.vs", "CubeShader.fsh");
+
+	chunk.transPos = glm::vec3(0,0,0);
 	
 	GoldOre gold;
 	DiamondOre diamond;
@@ -318,4 +342,5 @@ Game::Game(int windowWid, int winHei)
 	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, texture[5]);
 
+	createChunk();
 }

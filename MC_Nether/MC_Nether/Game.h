@@ -1,19 +1,11 @@
 #pragma once
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
-#include <learnopengl/shader.h>
 #include <math.h>
 
-#include "SoulSand.h"
-#include "GoldOre.h"
-#include "DiamondOre.h"
-#include "NetherBrick.h"
-#include "NetherRack.h"
-#include "Sand.h"
 #include "Mouse.h"
 #include "Keyboard.h"
-#include "SimplexNoise.h"
+
+#include "Chunk.h"
 
 class Game
 {
@@ -47,7 +39,7 @@ private:
 
 	Shader* pCubeShader = NULL; // shader for cubes
 
-	glm::vec3 lookPos = glm::vec3(0.0f, 0.0f, 10.0f);  // camera's position
+	glm::vec3 lookPos = glm::vec3(0.0f, 0.0f, 10.f);  // camera's position
 	glm::vec3 lookFront = glm::vec3(0.0f, 0.0f, -1.0f); // camera's front direction
 	glm::vec3 lookUp = glm::vec3(0.0f, 1.0f, 0.0f); // define the direction "up" for the world
 	glm::vec3 lookRight = glm::normalize(glm::cross(lookUp, lookFront)); // camera's right direction
@@ -56,6 +48,9 @@ private:
 	double fov = 45;
 	double zNear = 0.01;
 	double zFar = 100.0;
+
+	Chunk chunk;
+	std::vector<Chunk> chunks;
 
 	float keySpeed = 0.1f; // how fast camera move when key is pressed.
 
@@ -77,6 +72,10 @@ private:
 	void setShader(const char* vs, const char* fs);
 
 	void drawCube(int textIndex, float x, float y, float z);
+
+	void createChunk();
+
+	void drawChunkAndCeiling();
 
 public:
 	Game(int windowWid, int windowHei);

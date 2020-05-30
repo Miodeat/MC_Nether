@@ -33,9 +33,9 @@ std::vector<unsigned char*> Cubic::getTextData()
 	return this->vecTextData;
 }
 
-float Cubic::getScale()
+float Cubic::getCubeWidth()
 {
-	return scale;
+	return halfCubeWidth * 2;
 }
 
 void Cubic::setupTexture(std::vector<const char*> paths)

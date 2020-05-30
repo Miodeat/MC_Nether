@@ -45,11 +45,11 @@ public:
 	// @return: a vertor that contains all widths of texture images
 	std::vector<unsigned char*> getTextData();
 
-	// get cube scale
+	// get cube width
 	//
 	// @param
-	// @return: a float shows the scale
-	float getScale();
+	// @return: a float shows cube width
+	float getCubeWidth();
 protected:
 
 	std::vector<int> vecTextWidth; // vector for width of texture(maybe multiple)
@@ -70,53 +70,53 @@ protected:
 private:
 	static const int verLen = 108;
 
-	// using the scale to multiply with window's width or height can get cube width
-	float scale = 0.2f; 
+	// cube width
+	float halfCubeWidth = 0.05f;
 
 	// array of vertexs
 	float vertexs[verLen] = {
 		// front
-		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
-		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
-		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
-		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
-		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
-		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
 		// back
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
-		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
 		// left
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
-		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
-		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
-		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
-		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
 		// right
-		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
-		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
-		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
 		// bottom
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
-		0.2f, -0.2f, 0.2f,   // 5 back, lower right corner
-		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
-		0.2f, -0.2f, -0.2f,  // 1 front, lower right corner
-		-0.2f, -0.2f, -0.2f, // 0 front, lower left corner
-		-0.2f, -0.2f, 0.2f,  // 4 back, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
+		halfCubeWidth, -halfCubeWidth, halfCubeWidth,   // 5 back, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
+		halfCubeWidth, -halfCubeWidth, -halfCubeWidth,  // 1 front, lower right corner
+		-halfCubeWidth, -halfCubeWidth, -halfCubeWidth, // 0 front, lower left corner
+		-halfCubeWidth, -halfCubeWidth, halfCubeWidth,  // 4 back, lower left corner
 		// top
-		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
-		0.2f, 0.2f, -0.2f,   // 2 front, upper right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		0.2f, 0.2f, 0.2f,    // 6 back, upper right corner
-		-0.2f, 0.2f, 0.2f,   // 7 back, upper left corner
-		-0.2f, 0.2f, -0.2f,  // 3 front, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
+		halfCubeWidth, halfCubeWidth, -halfCubeWidth,   // 2 front, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		halfCubeWidth, halfCubeWidth, halfCubeWidth,    // 6 back, upper right corner
+		-halfCubeWidth, halfCubeWidth, halfCubeWidth,   // 7 back, upper left corner
+		-halfCubeWidth, halfCubeWidth, -halfCubeWidth,  // 3 front, upper left corner
 	};
 
 };
