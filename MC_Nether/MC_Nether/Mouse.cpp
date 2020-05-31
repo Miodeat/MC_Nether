@@ -4,12 +4,12 @@ double lastX; // last x position of cursor
 double lastY; // last y position of cursor
 
 float yaw = 0.0f; // redeclare xTrans and initialize
-float pitch = 0.0f; // redeclare yTrans and initialize
+float pitch = -45.f; // redeclare yTrans and initialize
 
 bool mouseBtnLeft = false;
 bool mouseBtnRight = false;
 
-glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f); // redeclare
+glm::vec3 front = glm::vec3(0.0f, -1.0f, -1.0f); // redeclare
 
 bool isMouseInit = false; // tell whether the lastX and lastY has been initialize
 

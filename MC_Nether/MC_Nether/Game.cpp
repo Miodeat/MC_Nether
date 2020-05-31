@@ -221,7 +221,8 @@ void Game::createChunk()
 			if (chunk.map[midBlock][i][midBlock] == NONE &&
 				chunk.map[midBlock][i - 1][midBlock] == NONE &&
 				chunk.map[midBlock][i - 2][midBlock] != NONE) {
-				lookPos = glm::vec3(midBlock * blockWidth, i * blockWidth, midBlock * blockWidth);
+				lookPos = glm::vec3(midBlock * blockWidth, (i + 4)* blockWidth, midBlock * blockWidth);
+				lightPos = lookPos;
 				break;
 			}
 		}

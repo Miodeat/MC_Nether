@@ -1,6 +1,6 @@
 #include "WindowSize.h"
 
-int winWidth = 600, winHeight = 600; // window's width and height
+int winWidth = 800, winHeight = 800; // window's width and height
 bool windowSizeChange = false;
 double asp = winWidth / (double)winHeight;
 
