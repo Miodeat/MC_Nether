@@ -324,9 +324,9 @@ std::vector<glm::vec3> Game::getCubeCanChoose()
 					continue;
 				}
 				glm::vec3 worldC = chunk.worldCoor[x][y][z];
-				if (abs(worldC.x - lookPos.x) <= 2.0f &&
-					abs(worldC.y - lookPos.y) <= 2.0f &&
-					abs(worldC.z - lookPos.z) <= 2.0f) {
+				if (abs(worldC.x - lookPos.x) <= 1.0f &&
+					abs(worldC.y - lookPos.y) <= 1.0f &&
+					abs(worldC.z - lookPos.z) <= 1.0f) {
 					result.push_back(glm::vec3(x, y, z));
 				}
 			}
