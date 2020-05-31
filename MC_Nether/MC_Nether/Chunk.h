@@ -51,10 +51,10 @@ private:
 	glm::vec3 transPos;
 	
 public:
-	const static int width = 30;
-	const static int height = 80;
+	const static int width = 26;
+	const static int height = 60;
 	
-	float baseHeight = 10.f;
+	float baseHeight = 8.f;
 	float frequency = 0.025f;
 	float amplitude = 5;
 

@@ -18,17 +18,18 @@ float moveSensitivity = 0.05f; // the mouse's move sensitivity
 
 void mouseBtnCallback(GLFWwindow* window, int btn, int action, int mods)
 {
-
-	switch (btn)
-	{
-	case GLFW_MOUSE_BUTTON_LEFT:
-		mouseBtnLeft = true;
-		break;
-	case GLFW_MOUSE_BUTTON_RIGHT:
-		mouseBtnRight = true;
-		break;
-	default:
-		break;
+	if (action == GLFW_PRESS) {
+		switch (btn)
+		{
+		case GLFW_MOUSE_BUTTON_LEFT:
+			mouseBtnLeft = true;
+			break;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			mouseBtnRight = true;
+			break;
+		default:
+			break;
+		}
 	}
 }
 

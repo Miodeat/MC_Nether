@@ -4,6 +4,7 @@
 
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "WindowSize.h"
 
 #include "Chunk.h"
 
@@ -20,6 +21,14 @@ private:
 	const static int SOUL_SAND = 3;    // id and index of soul_sand
 	const static int NETHER_BRICK = 4; // id and index of nether_brick
 	const static int NETHER_RACK = 5;  // id and index of nether_rack
+
+	// ID show witch surface of cubic is looked at
+	const static int LEFT = 0;
+	const static int RIGHT = 1;
+	const static int FRONT = 2;     
+	const static int BACK = 3;
+	const static int TOP = 4;
+	const static int BOTTOM = 5;
 
 	int winWidth, winHeight; // window's width and height
 
@@ -53,10 +62,12 @@ private:
 
 	std::vector<Chunk> chunks; // a vector stores all chunks
 
-	float cameraToFoot = 0.7f;
-	float cameraToTop = 0.3f;
-	float cameraWid = 0.5f;
+	float cameraToFoot = 0.15f;
+	float cameraToTop = 0.05f;
+	float cameraWid = 0.05f;
 	boundary cameraBoun;
+
+	int currentHandCube = NETHER_BRICK;
 
 	float keySpeed = 0.1f; // how fast camera move when key is pressed.
 
@@ -91,7 +102,11 @@ private:
 
 	std::vector<glm::vec3> getCubeCanChoose();
 
-	bool rayAABB(boundary boun);
+	bool rayAABB(boundary boun, float& t, int& surType);
+
+	void destoryCube(std::vector<glm::vec3> chooseCubePos);
+
+	void addCube(std::vector<glm::vec3> chooseCubePos);
 public:
 	Game(int windowWid, int windowHei);
 
@@ -108,6 +123,8 @@ public:
 	void keyPress();
 
 	void mouseClick();
+
+	void checkWindowSize();
 
 	void destory();
 };

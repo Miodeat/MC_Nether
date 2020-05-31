@@ -9,6 +9,8 @@ extern bool aPress;
 extern bool dPress;
 extern bool spacePress;
 extern bool LCtrlPress;
+extern bool currentHandCubeChange;
+extern int newHandCube;
 
 // keyboard callback for GLFW
 // tell openGL what to do when a key is pressed

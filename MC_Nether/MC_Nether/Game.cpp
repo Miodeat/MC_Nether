@@ -217,14 +217,14 @@ void Game::createChunk()
 		Chunk chunk(glm::vec3(0, 0, 0));
 		float blockWidth = chunk.blockWid;
 		int midBlock = (chunk.width / 2) - 1;
-		/*for (int i = chunk.height - 1; i >= 0; i--) {
+		for (int i = chunk.height - 1; i >= 0; i--) {
 			if (chunk.map[midBlock][i][midBlock] == NONE &&
 				chunk.map[midBlock][i - 1][midBlock] == NONE &&
 				chunk.map[midBlock][i - 2][midBlock] != NONE) {
 				lookPos = glm::vec3(midBlock * blockWidth, i * blockWidth, midBlock * blockWidth);
 				break;
 			}
-		}*/
+		}
 		chunks.push_back(chunk);
 	}
 }
@@ -320,8 +320,11 @@ std::vector<glm::vec3> Game::getCubeCanChoose()
 		{
 			for (int z = 0; z < chunk.width; z++)
 			{
+				if (chunk.map[x][y][z] == NONE) {
+					continue;
+				}
 				glm::vec3 worldC = chunk.worldCoor[x][y][z];
-				if (abs(worldC.x - lookPos.x) <= 1.0f &&
+				if (abs(worldC.x - lookPos.x) <= 2.0f &&
 					abs(worldC.y - lookPos.y) <= 2.0f &&
 					abs(worldC.z - lookPos.z) <= 2.0f) {
 					result.push_back(glm::vec3(x, y, z));
@@ -332,17 +335,15 @@ std::vector<glm::vec3> Game::getCubeCanChoose()
 	return result;
 }
 
-bool Game::rayAABB(boundary boun)
+bool Game::rayAABB(boundary boun, float &t, int &surType)
 {
-
+	int tmpSurType;
 	glm::vec3 ptOnPlane; //射线与包围盒某面的交点
 	glm::vec3 min = glm::vec3(boun.minx, boun.miny, boun.minz); //aabb包围盒最小点坐标
 	glm::vec3 max = glm::vec3(boun.maxx, boun.maxy, boun.maxz); //aabb包围盒最大点坐标
 
 	const glm::vec3& origin = lookPos; //射线起始点
 	const glm::vec3& dir = lookFront; //方向矢量
-
-	float t;
 
 	//分别判断射线与各面的相交情况
 
@@ -353,16 +354,22 @@ bool Game::rayAABB(boundary boun)
 		  使用射线与平面相交的公式求交点
 		 */
 		if (dir.x > 0)//若射线沿x轴正方向偏移
+		{
 			t = (min.x - origin.x) / dir.x;
+			tmpSurType = LEFT;
+		}
 		else  //射线沿x轴负方向偏移
+		{
 			t = (max.x - origin.x) / dir.x;
-
+			tmpSurType = RIGHT;
+		}
 		if (t > 0.f) //t>0时则射线与平面相交
 		{
 			ptOnPlane = origin + t * dir; //计算交点坐标
 			//判断交点是否在当前面内
 			if (min.y < ptOnPlane.y && ptOnPlane.y < max.y && min.z < ptOnPlane.z && ptOnPlane.z < max.z)
 			{
+				surType = tmpSurType;
 				return true; //射线与包围盒有交点
 			}
 		}
@@ -372,9 +379,15 @@ bool Game::rayAABB(boundary boun)
 	if (dir.y != 0.f)
 	{
 		if (dir.y > 0)
+		{
 			t = (min.y - origin.y) / dir.y;
+			tmpSurType = BOTTOM;
+		}
 		else
+		{
 			t = (max.y - origin.y) / dir.y;
+			tmpSurType = TOP;
+		}
 
 		if (t > 0.f)
 		{
@@ -382,18 +395,25 @@ bool Game::rayAABB(boundary boun)
 
 			if (min.z < ptOnPlane.z && ptOnPlane.z < max.z && min.x < ptOnPlane.x && ptOnPlane.x < max.x)
 			{
+				surType = tmpSurType;
 				return true;
 			}
 		}
 	}
 
-	//若射线沿z轴方向有分量 判断是否与包围盒y轴方向有交点
+	//若射线沿z轴方向有分量 判断是否与包围盒z轴方向有交点
 	if (dir.z != 0.f)
 	{
 		if (dir.z > 0)
+		{
 			t = (min.z - origin.z) / dir.z;
+			tmpSurType = BACK;
+		}
 		else
+		{
 			t = (max.z - origin.z) / dir.z;
+			tmpSurType = FRONT;
+		}
 
 		if (t > 0.f)
 		{
@@ -401,11 +421,136 @@ bool Game::rayAABB(boundary boun)
 
 			if (min.x < ptOnPlane.x && ptOnPlane.x < max.x && min.y < ptOnPlane.y && ptOnPlane.y < max.y)
 			{
+				surType = tmpSurType;
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+void Game::destoryCube(std::vector<glm::vec3> chooseCubePos)
+{
+	Chunk chunk = chunks.at(0);
+	int selectedCubeIndex = -1;
+	float tmin = 2000000;
+	for (int i = 0; i < chooseCubePos.size(); i++) {
+		glm::vec3 tmp = chooseCubePos.at(i);
+		float t;
+		int tmpSur;
+		if (rayAABB(chunk.cubeBouns[(int)tmp.x][(int)tmp.y][(int)tmp.z], t, tmpSur)) {
+			if (t < tmin) {
+				tmin = t;
+				selectedCubeIndex = i;
+			}
+		}
+	}
+	if (selectedCubeIndex != -1) {
+		glm::vec3 selectCube = chooseCubePos.at(selectedCubeIndex);
+		chunks.at(0).map[(int)selectCube.x][(int)selectCube.y][(int)selectCube.z] = NONE;
+	}
+}
+
+void Game::addCube(std::vector<glm::vec3> chooseCubePos)
+{
+	Chunk chunk = chunks.at(0);
+	int selectedCubeIndex = -1;
+	int selectedSur = -1;
+	float tmin = 2000000;
+	for (int i = 0; i < chooseCubePos.size(); i++) {
+		glm::vec3 tmp = chooseCubePos.at(i);
+		float t;
+		int tmpSur;
+		if (rayAABB(chunk.cubeBouns[(int)tmp.x][(int)tmp.y][(int)tmp.z], t, tmpSur)) {
+			if (t < tmin) {
+				tmin = t;
+				selectedCubeIndex = i;
+				selectedSur = tmpSur;
+			}
+		}
+	}
+	if (selectedCubeIndex != -1) {
+		glm::vec3 selectCube = chooseCubePos.at(selectedCubeIndex);
+		boundary cubeB;
+		switch (selectedSur)
+		{
+		case LEFT:
+			if ((int)selectCube.x - 1 < 0) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x - 1][(int)selectCube.y][(int)selectCube.z];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x - 1][(int)selectCube.y][(int)selectCube.z] = currentHandCube;
+			break;
+		case RIGHT:
+			if ((int)selectCube.x + 1 >= chunk.width) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x + 1][(int)selectCube.y][(int)selectCube.z];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x + 1][(int)selectCube.y][(int)selectCube.z] = currentHandCube;
+			break;
+		case BOTTOM:
+			if ((int)selectCube.y - 1 < 0) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x][(int)selectCube.y - 1][(int)selectCube.z];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x][(int)selectCube.y - 1][(int)selectCube.z] = currentHandCube;
+			break;
+		case TOP:
+			if ((int)selectCube.y + 1 > chunk.height) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x][(int)selectCube.y + 1][(int)selectCube.z];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x][(int)selectCube.y + 1][(int)selectCube.z] = currentHandCube;
+			break;
+
+		case BACK:
+			if ((int)selectCube.z - 1 < 0) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x][(int)selectCube.y][(int)selectCube.z - 1];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x][(int)selectCube.y][(int)selectCube.z - 1] = currentHandCube;
+			break;
+		case FRONT:
+			if ((int)selectCube.z + 1 > chunk.width) {
+				break;
+			}
+			cubeB = chunks.at(0).cubeBouns[(int)selectCube.x][(int)selectCube.y][(int)selectCube.z + 1];
+			if (cameraBoun.minx < cubeB.maxx && cameraBoun.maxx > cubeB.minx &&
+				cameraBoun.miny < cubeB.maxy && cameraBoun.maxy > cubeB.miny &&
+				cameraBoun.minz < cubeB.maxz && cameraBoun.maxz > cubeB.minz) {
+				break;
+			}
+			chunks.at(0).map[(int)selectCube.x][(int)selectCube.y][(int)selectCube.z + 1] = currentHandCube;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Game::keyPress()
@@ -462,22 +607,34 @@ void Game::keyPress()
 		}
 		LCtrlPress = false;
 	}
+
+	if (currentHandCubeChange) {
+		currentHandCube = newHandCube - 1;
+		currentHandCubeChange = false;
+	}
 }
 
 void Game::mouseClick()
 {
+	Chunk chunk = chunks.at(0);
 	if (mouseBtnLeft) {
 		std::vector<glm::vec3> chooseCubePos = getCubeCanChoose();
+		addCube(chooseCubePos);
 		mouseBtnLeft = false;
 	}
 
 	if (mouseBtnRight) {
 		std::vector<glm::vec3> chooseCubePos = getCubeCanChoose();
-		for (int i = 0; i < chooseCubePos.size(); i++) {
-			glm::vec3 tmp = chooseCubePos.at(i);
-			
-		}
+		destoryCube(chooseCubePos);
 		mouseBtnRight = false;
+	}
+}
+
+void Game::checkWindowSize()
+{
+	if (windowSizeChange) {
+		this->aspect = asp;
+		windowSizeChange = false;
 	}
 }
 
@@ -506,7 +663,9 @@ void Game::render()
 
 	// update lookRight
 	lookRight = glm::normalize(glm::cross(lookUp, lookFront));
+	checkWindowSize();
 	keyPress();
+	mouseClick();
 	drawChunk();
 
 }
