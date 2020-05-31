@@ -25,11 +25,19 @@ void Game::setVertex()
 	float* textCoors = new float[textCoorLen];
 	soul.getTextCoors(textCoors);
 
+	int cubeNorLen = soul.getNorLen();
+	float* normals = new float[cubeNorLen];
+	soul.getNormal(normals);
+
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, cubeVerLen * sizeof(float) + textCoorLen * sizeof(float), NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 
+		cubeVerLen * sizeof(float) + textCoorLen * sizeof(float) + cubeNorLen * sizeof(float),
+		NULL, GL_STATIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, cubeVerLen * sizeof(float), vertexs);
 	glBufferSubData(GL_ARRAY_BUFFER, cubeVerLen * sizeof(float), textCoorLen * sizeof(float), textCoors);
+	glBufferSubData(GL_ARRAY_BUFFER, cubeVerLen * sizeof(float) + textCoorLen * sizeof(float),
+		cubeNorLen * sizeof(float), normals);
 
 
 	glGenVertexArrays(1, &VAO);
@@ -38,10 +46,14 @@ void Game::setVertex()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(cubeVerLen * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 
+		(void*)(cubeVerLen * sizeof(float) + textCoorLen * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 
 	delete[] vertexs;
 	delete[] textCoors;
+	delete[] normals;
 }
 
 void Game::setVertex(unsigned int &VBO, unsigned int &VAO, Cubic* cube, int cubeType)
@@ -183,6 +195,13 @@ void Game::drawCube(int textIndex, float x, float y, float z)
 	glm::mat4 projection = glm::perspective(fov * 0.5 * glm::pi<double>() / 360.0, aspect, zNear, zFar);
 	pCubeShader->setMat4("projection", projection);
 
+	pCubeShader->setVec3("lightPos", lightPos);
+	pCubeShader->setVec3("lightAmbient", lightAmbient);
+	pCubeShader->setVec3("lightDiffuse", lightDiffuse);
+	pCubeShader->setVec3("lightSpecular", lightSpecular);
+	pCubeShader->setVec3("lookPos", lookPos);
+	pCubeShader->setFloat("matShininess", matShininess);
+
 	pCubeShader->setInt("texture", textIndex);
 
 	// do rendering
@@ -291,6 +310,104 @@ boundary Game::genCameraBoun(glm::vec3 target)
 		target.z - cameraWid, target.z + cameraWid);
 }
 
+std::vector<glm::vec3> Game::getCubeCanChoose()
+{
+	std::vector<glm::vec3> result;
+	Chunk chunk = chunks.at(0);
+	for (int x = 0; x < chunk.width; x++)
+	{
+		for (int y = 0; y < chunk.height; y++)
+		{
+			for (int z = 0; z < chunk.width; z++)
+			{
+				glm::vec3 worldC = chunk.worldCoor[x][y][z];
+				if (abs(worldC.x - lookPos.x) <= 1.0f &&
+					abs(worldC.y - lookPos.y) <= 2.0f &&
+					abs(worldC.z - lookPos.z) <= 2.0f) {
+					result.push_back(glm::vec3(x, y, z));
+				}
+			}
+		}
+	}
+	return result;
+}
+
+bool Game::rayAABB(boundary boun)
+{
+
+	glm::vec3 ptOnPlane; //射线与包围盒某面的交点
+	glm::vec3 min = glm::vec3(boun.minx, boun.miny, boun.minz); //aabb包围盒最小点坐标
+	glm::vec3 max = glm::vec3(boun.maxx, boun.maxy, boun.maxz); //aabb包围盒最大点坐标
+
+	const glm::vec3& origin = lookPos; //射线起始点
+	const glm::vec3& dir = lookFront; //方向矢量
+
+	float t;
+
+	//分别判断射线与各面的相交情况
+
+	//判断射线与包围盒x轴方向的面是否有交点
+	if (dir.x != 0.f) //射线x轴方向分量不为0 若射线方向矢量的x轴分量为0，射线不可能经过包围盒朝x轴方向的两个面
+	{
+		/*
+		  使用射线与平面相交的公式求交点
+		 */
+		if (dir.x > 0)//若射线沿x轴正方向偏移
+			t = (min.x - origin.x) / dir.x;
+		else  //射线沿x轴负方向偏移
+			t = (max.x - origin.x) / dir.x;
+
+		if (t > 0.f) //t>0时则射线与平面相交
+		{
+			ptOnPlane = origin + t * dir; //计算交点坐标
+			//判断交点是否在当前面内
+			if (min.y < ptOnPlane.y && ptOnPlane.y < max.y && min.z < ptOnPlane.z && ptOnPlane.z < max.z)
+			{
+				return true; //射线与包围盒有交点
+			}
+		}
+	}
+
+	//若射线沿y轴方向有分量 判断是否与包围盒y轴方向有交点
+	if (dir.y != 0.f)
+	{
+		if (dir.y > 0)
+			t = (min.y - origin.y) / dir.y;
+		else
+			t = (max.y - origin.y) / dir.y;
+
+		if (t > 0.f)
+		{
+			ptOnPlane = origin + t * dir;
+
+			if (min.z < ptOnPlane.z && ptOnPlane.z < max.z && min.x < ptOnPlane.x && ptOnPlane.x < max.x)
+			{
+				return true;
+			}
+		}
+	}
+
+	//若射线沿z轴方向有分量 判断是否与包围盒y轴方向有交点
+	if (dir.z != 0.f)
+	{
+		if (dir.z > 0)
+			t = (min.z - origin.z) / dir.z;
+		else
+			t = (max.z - origin.z) / dir.z;
+
+		if (t > 0.f)
+		{
+			ptOnPlane = origin + t * dir;
+
+			if (min.x < ptOnPlane.x && ptOnPlane.x < max.x && min.y < ptOnPlane.y && ptOnPlane.y < max.y)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void Game::keyPress()
 {
 	glm::vec3 front = lookFront;
@@ -299,6 +416,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos + (keySpeed * front);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		wPress = false;
 	}
@@ -306,6 +424,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos - (keySpeed * front);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		sPress = false;
 	}
@@ -313,6 +432,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos + (keySpeed * lookRight);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		aPress = false;
 	}
@@ -320,6 +440,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos - (keySpeed * lookRight);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		dPress = false;
 	}
@@ -328,6 +449,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos + (keySpeed * lookUp);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		spacePress = false;
 	}
@@ -336,6 +458,7 @@ void Game::keyPress()
 		glm::vec3 targetPos = lookPos - (keySpeed * lookUp);
 		if (!checkMoveCollision(targetPos)) {
 			lookPos = targetPos;
+			lightPos = targetPos;
 		}
 		LCtrlPress = false;
 	}
@@ -343,12 +466,18 @@ void Game::keyPress()
 
 void Game::mouseClick()
 {
-	if (mouseBtn1) {
-		mouseBtn1 = false;
+	if (mouseBtnLeft) {
+		std::vector<glm::vec3> chooseCubePos = getCubeCanChoose();
+		mouseBtnLeft = false;
 	}
 
-	if (mouseBtn3) {
-		mouseBtn3 = false;
+	if (mouseBtnRight) {
+		std::vector<glm::vec3> chooseCubePos = getCubeCanChoose();
+		for (int i = 0; i < chooseCubePos.size(); i++) {
+			glm::vec3 tmp = chooseCubePos.at(i);
+			
+		}
+		mouseBtnRight = false;
 	}
 }
 
@@ -366,7 +495,7 @@ void Game::destory()
 void Game::render()
 {
 	// clear screen
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.3f, 0.0f, 0.0f, 0.5f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// use the shader program

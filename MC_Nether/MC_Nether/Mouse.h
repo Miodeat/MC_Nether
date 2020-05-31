@@ -9,8 +9,8 @@ extern float pitch; // the distance that cursor moved along y axis
 
 extern glm::vec3 front; // the direction camera should look at
 
-extern bool mouseBtn1;
-extern bool mouseBtn3;
+extern bool mouseBtnLeft;
+extern bool mouseBtnRight;
 
 // a callback function for openGL, 
 // tell it what to do when a mouse button is pressed.

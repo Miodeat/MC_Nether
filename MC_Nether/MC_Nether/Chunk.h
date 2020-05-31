@@ -64,6 +64,8 @@ public:
 
 	boundary cubeBouns[width][height][width];
 
+	glm::vec3 worldCoor[width][height][width];
+
 	void setTransPos(glm::vec3 tran);
 	glm::vec3 getTransPos();
 

@@ -13,6 +13,18 @@ int Cubic::getVerLen()
 	return verLen;
 }
 
+void Cubic::getNormal(float*& nor)
+{
+	for (int i = 0; i < norLen; i++) {
+		nor[i] = this->normal[i];
+	}
+}
+
+int Cubic::getNorLen()
+{
+	return norLen;
+}
+
 std::vector<int> Cubic::getTextWidths()
 {
 	return this->vecTextWidth;

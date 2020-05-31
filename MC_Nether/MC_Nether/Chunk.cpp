@@ -121,6 +121,9 @@ void Chunk::initMap()
                 opx += transPos.x;
                 opy += transPos.y;
                 opz += transPos.z;
+
+                worldCoor[x][y][z] = glm::vec3(opx, opy, opz);
+
                 cubeBouns[x][y][z] = boundary(opx - half, opx + half, opy - half,
                     opy + half, opz - half, opz + half);
             }

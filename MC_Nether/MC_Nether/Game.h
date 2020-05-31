@@ -23,12 +23,6 @@ private:
 
 	int winWidth, winHeight; // window's width and height
 
-	float worldZmin = -5.f;
-	float worldZmax = 5.f;
-	float worldXmin = -5.f;
-	float worldXmax = 5.f;
-	float worldYmin = -5.f;
-	float worldYmax = 5.f;
 
 	unsigned int texture[textureNum]; // array stroes textures
 
@@ -44,6 +38,14 @@ private:
 	glm::vec3 lookUp = glm::vec3(0.0f, 1.0f, 0.0f); // define the direction "up" for the world
 	glm::vec3 lookRight = glm::normalize(glm::cross(lookUp, lookFront)); // camera's right direction
 
+	// light
+	glm::vec3 lightPos = lookPos;
+	glm::vec3 lightAmbient = glm::vec3(0.5f, 0.0f, 0.0f);
+	glm::vec3 lightDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightSpecular = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	float matShininess = 1.0;
+
 	double aspect; // view port's aspect ratio
 	double fov = 45;
 	double zNear = 0.01;
@@ -51,9 +53,9 @@ private:
 
 	std::vector<Chunk> chunks; // a vector stores all chunks
 
-	float cameraToFoot = 0.25f;
-	float cameraToTop = 0.05f;
-	float cameraWid = 0.1f;
+	float cameraToFoot = 0.7f;
+	float cameraToTop = 0.3f;
+	float cameraWid = 0.5f;
 	boundary cameraBoun;
 
 	float keySpeed = 0.1f; // how fast camera move when key is pressed.
@@ -87,6 +89,9 @@ private:
 
 	boundary genCameraBoun(glm::vec3 target);
 
+	std::vector<glm::vec3> getCubeCanChoose();
+
+	bool rayAABB(boundary boun);
 public:
 	Game(int windowWid, int windowHei);
 

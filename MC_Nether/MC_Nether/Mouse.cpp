@@ -6,8 +6,8 @@ double lastY; // last y position of cursor
 float yaw = 0.0f; // redeclare xTrans and initialize
 float pitch = 0.0f; // redeclare yTrans and initialize
 
-bool mouseBtn1 = false;
-bool mouseBtn3 = false;
+bool mouseBtnLeft = false;
+bool mouseBtnRight = false;
 
 glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f); // redeclare
 
@@ -15,15 +15,17 @@ bool isMouseInit = false; // tell whether the lastX and lastY has been initializ
 
 float moveSensitivity = 0.05f; // the mouse's move sensitivity
 
+
 void mouseBtnCallback(GLFWwindow* window, int btn, int action, int mods)
 {
+
 	switch (btn)
 	{
-	case GLFW_MOUSE_BUTTON_1:
-		mouseBtn1 = true;
+	case GLFW_MOUSE_BUTTON_LEFT:
+		mouseBtnLeft = true;
 		break;
-	case GLFW_MOUSE_BUTTON_3:
-		mouseBtn3 = true;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		mouseBtnRight = true;
 		break;
 	default:
 		break;
@@ -55,12 +57,14 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	yaw += dx;
 	pitch += dy;
 
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	if (pitch > 60.0f)
+		pitch = 60.0f;
+	if (pitch < -60.0f)
+		pitch = -60.0f;
 
 	front.x = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.y = sin(glm::radians(pitch));
 	front.z = -cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 }
+
+
